@@ -21,10 +21,6 @@ print("✅ CLIP model loaded")
 client = chromadb.PersistentClient(path="chromadb_persist")
 collection = client.get_or_create_collection("image_embeddings")
 
-# Initialize Azure and Redis (use your existing connections)
-# blob_service_client = ... (your existing Azure connection)
-# cache = ... (your existing Redis connection)
-
 def get_normalized_image_embedding(image):
     """Generate normalized CLIP embedding for better similarity search"""
     try:
@@ -71,8 +67,8 @@ def process_and_store_embeddings_improved():
     processed_count = 0
     error_count = 0
     
-    # Process a reasonable number of images (start with 1000 for testing)
-    max_images = 1000  # Increase this gradually
+    # Processing images 
+    max_images = 1000 
     
     try:
         for idx, blob in enumerate(container_client.list_blobs()):
@@ -120,7 +116,7 @@ def process_and_store_embeddings_improved():
                     processed_count += 1
                     
                     # Progress update
-                    if processed_count % 50 == 0:
+                    if processed_count % max_images == 0:
                         print(f"✅ Processed {processed_count} images successfully")
                 else:
                     error_count += 1
@@ -270,7 +266,6 @@ def rebuild_embeddings_if_needed():
 # Main execution
 if __name__ == "__main__":
     print("🚀 Starting Improved Image Search System")
-    print("=" * 50)
     
     # Step 1: Check and rebuild embeddings if needed
     embedding_count = rebuild_embeddings_if_needed()
